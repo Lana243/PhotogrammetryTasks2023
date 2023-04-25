@@ -18,9 +18,10 @@ namespace {
         copy(Ecv, E);
 
         Eigen::JacobiSVD<Eigen::MatrixXd> svd(E, Eigen::ComputeFullU | Eigen::ComputeFullV);
-        throw std::runtime_error("not implemented yet");
-// TODO
-
+        Eigen::VectorXd sigmas = svd.singularValues();
+        sigmas(1) = sigmas(0);
+        sigmas(2) = 0;
+        E = svd.matrixU() * sigmas.asDiagonal() * svd.matrixV().transpose();
         copy(E, Ecv);
     }
 
@@ -28,12 +29,9 @@ namespace {
 
 cv::Matx33d phg::fmatrix2ematrix(const cv::Matx33d &F, const phg::Calibration &calib0, const phg::Calibration &calib1)
 {
-    throw std::runtime_error("not implemented yet");
-//    matrix3d E = TODO;
-//
-//    ensureSpectralProperty(E);
-//
-//    return E;
+    matrix3d E = calib1.K().t() * F * calib0.K();
+    ensureSpectralProperty(E);
+    return E;
 }
 
 namespace {
@@ -174,7 +172,7 @@ void phg::decomposeUndistortedPMatrix(cv::Matx33d &R, cv::Vec3d &O, const cv::Ma
     O(2) = O_mat(2);
 
     if (cv::determinant(R) < 0) {
-        R *= -1;   
+        R *= -1;
     }
 }
 

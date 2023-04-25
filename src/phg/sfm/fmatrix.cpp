@@ -147,7 +147,7 @@ namespace {
 
             int support = 0;
             for (int i = 0; i < n_matches; ++i) {
-                if (phg::epipolarTest(m0[i], m1[i], F, threshold_px) && phg::epipolarTest(m1[i], m0[i], F, threshold_px))
+                if (phg::epipolarTest(m0[i], m1[i], F, threshold_px) && phg::epipolarTest(m1[i], m0[i], F.t(), threshold_px))
                 {
                     ++support;
                 }
